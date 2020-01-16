@@ -1,57 +1,47 @@
 import dayjs from 'dayjs';
-var test_audio;
-var date;
-var now;
-var start_time;
-var url = 'https://webrtc.newsquawk.com/flussonic/api/media'
-
-// window.dayjs = dayjs;
-//
-// // channels = [ 'audio_test', 'forex-realtime', '' ];
-//
-//   fetch('https://webrtc.newsquawk.com/flussonic/api/media', {
-//     headers: new Headers({
-//        'Authorization': "Basic " + btoa('view:ReadMe890')
-//      }),
-//   })
-//   .then(response => {
-//     return response.json();
-//   })
-//   .then((data) => {
-//     test_audio = data.find(function(item) {
-//       return item.entry == 'stream' && item.value.name.match('audio_test');
-//     });
-//     date = test_audio.value.stats.lifetime;
-//     console.log({running: date});
-//     now = new Date().getTime();
-//     start_time = dayjs(now - date);
-//     console.log({
-//       start_time: start_time.format("DD-MM-YYYY HH:mm:ss"),
-//       name: test_audio.value.name.replace("live/"", "")
-//     });
-//   });
+const URL = 'https://webrtc.newsquawk.com/flussonic/api/media'
 
 async function getData(url) {
   try {
     const response = await fetch(url, {
-        headers: new Headers({
-           'Authorization': "Basic " + btoa('view:ReadMe890')
-         })
+      headers: new Headers({
+        'Authorization': 'Basic ' + btoa('view:ReadMe890')
+      })
     });
-    const data = await response.json();
-    const test_audio = data.find(function(item) {
-      return item.entry == 'stream' && item.value.name.match('audio_test');
-    });
-    date = test_audio.value.stats.lifetime;
-    console.log({running: date});
-    now = new Date().getTime();
-    start_time = dayjs(now - date);
-    console.log({
-      start_time: start_time.format("DD-MM-YYYY HH:mm:ss"),
-      name: test_audio.value.name.replace("live/", "")
-    });
-  } catch(err) {
-      throw("error while fetching data")
+    return response.json();
+  } catch(error) {
+    throw('error while fetching data :'  + error);
   }
 }
-getData(url)
+
+function extractData(json, channel_list) {
+  return json.map(item => {
+    const now = new Date().getTime();
+    const start_time = dayjs(now - item.value.stats.lifetime);
+    return {
+      name: item.value.name.replace('live/', ''),
+      start_time: start_time.format('DD-MM-YYYY HH:mm:ss')
+    };
+  });
+};
+// if the json date matches the channel list then filter if not then remove string from array
+function filterActive(json, channel_list) {
+  return json.filter(item => {
+    return channel_list.find(label => {
+      return item.value.name.match(label);
+    });
+  });
+};
+
+async function run() {
+  const json = await getData(URL);
+  const active = filterActive(json, [ 'audio_test', 'forex-realtime', 'multi_asset-realtime', 'blah' ]);
+  const content = extractData(active);
+  console.log(content);
+}
+
+run();
+
+// const test_audio = json.find(function(item) {
+//   return item.entry == 'stream' && item.value.name.match('audio_test');
+// });
