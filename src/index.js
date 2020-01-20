@@ -24,7 +24,7 @@ function extractData(json, channel_list) {
     };
   });
 };
-// if the json date matches the channel list then filter if not then remove string from array
+// if the json data matches the channel list then filter if not then remove string from array
 function filterActive(json, channel_list) {
   return json.filter(item => {
     return channel_list.find(label => {
@@ -41,7 +41,3 @@ async function run() {
 }
 
 run();
-
-// const test_audio = json.find(function(item) {
-//   return item.entry == 'stream' && item.value.name.match('audio_test');
-// });
