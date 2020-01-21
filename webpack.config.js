@@ -1,17 +1,20 @@
 const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
+const target = path.resolve(__dirname, 'dist');
 
 module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'dist')
+    path: target
   },
   plugins: [
-    new CopyWebpackPlugin({
-      from: 'src', to: 'dest'
-    })
+    new CopyWebpackPlugin([{
+      from: 'assets', to: target
+    }]),
+    new WriteFilePlugin
   ],
   resolve: {
     extensions: ['.js', '.ts']
