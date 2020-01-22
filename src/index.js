@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import mustache from 'mustache';
 const URL = 'https://webrtc.newsquawk.com/flussonic/api/media'
 
 async function getData(url) {
@@ -38,6 +39,11 @@ async function run() {
   const active = filterActive(json, [ 'audio_test', 'forex-realtime', 'multi_asset-realtime', 'blah' ]);
   const content = extractData(active);
   console.log(content);
+};
+
+function loadtemp() {
+  var output = Mustache.render("{{content}} has been running since {{start_time}}"", view)
+  document.getElemnentById('status').innerHTML = output;
 }
 
 run();

@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "date-fns": "^2.8.1",
     "dayjs": "^1.8.19",
-    "date-fns": "^2.8.1"
+    "mustache": "^4.0.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^5.1.1",
