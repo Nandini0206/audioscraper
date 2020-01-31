@@ -1,4 +1,5 @@
 const path = require('path');
+const mustache = require('mustache');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');

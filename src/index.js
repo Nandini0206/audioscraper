@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import mustache from 'mustache';
+import Mustache from 'mustache';
 const URL = 'https://webrtc.newsquawk.com/flussonic/api/media'
 
 async function getData(url) {
@@ -25,6 +25,7 @@ function extractData(json, channel_list) {
     };
   });
 };
+
 // if the json data matches the channel list then filter if not then remove string from array
 function filterActive(json, channel_list) {
   return json.filter(item => {
@@ -37,13 +38,18 @@ function filterActive(json, channel_list) {
 async function run() {
   const json = await getData(URL);
   const active = filterActive(json, [ 'audio_test', 'forex-realtime', 'multi_asset-realtime', 'blah' ]);
-  const content = extractData(active);
-  console.log(content);
+  return extractData(active);
 };
 
-function loadtemp() {
-  var output = Mustache.render("{{content}} has been running since {{start_time}}"", view)
-  document.getElemnentById('status').innerHTML = output;
-}
+async function loadtemp() {
+  var view = {
+    'channels' : await run()
+  }
+  console.log({ TEST: view.channels });
+  var output = Mustache.render("<ul>{{#channels}}<li>The channels running are {{name}} since {{start_time}}</li>{{/channels}}</ul>", view);
+  console.log(output);
+  return document.body.innerHTML = output;
+};
 
 run();
+loadtemp();
