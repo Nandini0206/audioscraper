@@ -39,5 +39,8 @@ loadtemp = ->
   console.log output
   document.body.innerHTML = output
 
-do run
-do loadtemp
+recurring = ->
+  do loadtemp
+  setTimeout recurring, 2000
+
+do recurring
