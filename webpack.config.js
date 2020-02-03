@@ -6,7 +6,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const target = path.resolve(__dirname, 'dist');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.coffee',
   output: {
     filename: 'main.js',
     path: target
@@ -17,6 +17,14 @@ module.exports = {
     }]),
     new WriteFilePlugin
   ],
+  module: {
+    rules: [
+      {
+        test: /\.coffee$/,
+        use: [ 'coffee-loader' ]
+      }
+    ]
+  },
   resolve: {
     extensions: ['.js', '.ts']
   }
